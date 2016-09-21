@@ -253,7 +253,13 @@ function forEach(obj, iterator, context) {
       var isPrimitive = typeof obj !== 'object';
       for (key = 0, length = obj.length; key < length; key++) {
         if (isPrimitive || key in obj) {
-          iterator.call(context, obj[key], key, obj);
+          try {
+            iterator.call(context, obj[key], key, obj);
+          } catch (err) {
+            // show module name of missing dependency
+            console.error('' + err);
+            throw err;
+          }
         }
       }
     } else if (obj.forEach && obj.forEach !== forEach) {
